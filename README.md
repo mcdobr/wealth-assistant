@@ -16,5 +16,5 @@ Architecture:
 
 Technologies I want to learn more about and do this:
 - Golang
-- React & React Native
+- React
 
