@@ -2,13 +2,24 @@ package main
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
+
+	router.Use(
+		cors.New(cors.Config{
+			AllowOrigins:     []string{"http://localhost:5173"},
+			AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
+			AllowHeaders:     []string{"Origin"},
+			ExposeHeaders:    []string{"Content-Length"},
+			AllowCredentials: true,
+		}))
 
 	apiRoutesV1 := router.Group("/api/v1")
 	assetsResources := apiRoutesV1.Group("/assets")
