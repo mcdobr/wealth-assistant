@@ -2,6 +2,7 @@
 This is a side-project about tracking investment opportunities.
 
 Use-cases:
+- Use an OpenID/OAuth provider for authentication/authorization
 - Get stock data for free (will not be realtime because of pricing)
 - Asset/debt forecasting
 
