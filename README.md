@@ -5,6 +5,7 @@ Use-cases:
 - Use an OpenID/OAuth provider for authentication/authorization
 - Get stock data for free (will not be realtime because of pricing)
 - Asset/debt forecasting
+- Expense and budget tracking
 
 Pie in the sky use cases:
 - Define automatic strategies
