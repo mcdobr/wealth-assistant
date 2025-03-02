@@ -1,13 +1,18 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
+	"os"
 
+	"github.com/Masterminds/squirrel"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/ing-bank/gohateoas"
+	"github.com/jackc/pgx/v5"
 )
 
 type ApiResponse struct {
@@ -36,6 +41,13 @@ func (apiResponse ApiResponse) MarshalJson() ([]byte, error) {
 }
 
 func main() {
+	databaseConnection, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	defer databaseConnection.Close(context.Background())
+
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 
@@ -70,6 +82,18 @@ func findAssets(context *gin.Context) {
 
 func findAsset(context *gin.Context) {
 	// For now, we can imagine that a DB lookup happens here
+	findAssetById := squirrel.Select("*").
+		From("assets").
+		Where(squirrel.Eq{"id": 1})
+
+	sql, _, err := findAssetById.ToSql()
+
+	if err != nil {
+		fmt.Println("Error generating SQL:", err)
+	} else {
+		fmt.Println("sql looks ok", sql)
+	}
+
 	asset := Asset{
 		ID:   1,
 		Name: "S&P 500 Index",

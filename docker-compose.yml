@@ -1,0 +1,35 @@
+services:
+  db:
+    image: "postgres:17"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db-volume:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - wealth-assistant-network
+    restart: unless-stopped
+  backend:
+    image: wealth-assistant-api
+    build: 
+      context: ./wealth-assistant-api
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable"
+    networks:
+      - wealth-assistant-network
+    restart: unless-stopped
+#  frontend:
+#    image: wealth-assistant-web
+#    build: 
+#      context: ./wealth-assistant-web
+
+volumes:
+  db-volume: {}
+
+networks:
+  wealth-assistant-network:
